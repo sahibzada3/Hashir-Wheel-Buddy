@@ -1,6 +1,6 @@
-# Interactive circular recap home page
+# Mobile interactive recap rebuild
 
-- Recreate the black, minimal reference composition with fixed corner labels.
-- Build a large circular 12-month timeline with matching editorial badges and imagery.
-- Map vertical wheel and finger scrolling to smooth wheel rotation.
-- Verify the result at phone and desktop sizes.
+- Constrain the experience to a centered phone-width canvas on larger screens.
+- Rebuild the circular month geometry and attached editorial objects from the reference.
+- Replace page scrolling with direct pointer and touch rotation plus momentum.
+- Validate the layout and interaction at 390 × 844.
