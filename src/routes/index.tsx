@@ -54,7 +54,7 @@ function Index() {
       const rotation = rotationRef.current;
       wheel.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
       wheel.querySelectorAll<HTMLElement>("[data-counter-rotate]").forEach((item) => {
-        const base = Number(item.dataset.baseAngle ?? 0);
+        const base = Number(item.dataset["baseAngle"] ?? 0);
         item.style.transform = `translateY(-50%) rotate(${-rotation - base}deg)`;
       });
     };
