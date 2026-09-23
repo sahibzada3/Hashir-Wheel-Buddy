@@ -148,8 +148,8 @@ function Index() {
               </div>
             );
           })}
-          {Array.from({ length: 36 }).map((_, index) => (
-            <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 10}deg` } as CSSProperties} />
+          {Array.from({ length: 60 }).map((_, index) => (
+            <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6}deg` } as CSSProperties} />
           ))}
         </div>
 
