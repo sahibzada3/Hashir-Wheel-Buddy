@@ -137,7 +137,7 @@ function Index() {
 
         <div ref={wheelRef} className="wheel">
           {months.map((month, index) => {
-            const angle = index * 30;
+            const angle = index * 30 + 180;
             return (
               <div className="month" key={month} style={{ "--month-angle": `${angle}deg` } as CSSProperties}>
                 <span className="tick" />
@@ -149,7 +149,7 @@ function Index() {
             );
           })}
           {Array.from({ length: 60 }).map((_, index) => (
-            <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6}deg` } as CSSProperties} />
+            <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6 + 180}deg` } as CSSProperties} />
           ))}
         </div>
 
