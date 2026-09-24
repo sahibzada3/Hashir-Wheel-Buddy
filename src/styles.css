@@ -43,14 +43,14 @@ body { background: var(--background); color: var(--foreground); font-family: var
 .footer-nav { bottom: 0; padding: 10px 9px; font-size: 6px; font-weight: 500; }
 .footer-nav span:nth-child(2) { position: absolute; left: 50%; transform: translateX(-50%); }
 
-.wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: 205vw; max-width: 860px; aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
+.wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: 260vw; max-width: 1090px; aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
 .month, .minor-tick { position: absolute; inset: 0; transform: rotate(var(--month-angle)); pointer-events: none; }
-.month-name { position: absolute; left: 90%; top: 49%; font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 400; letter-spacing: 0; white-space: nowrap; transform: translateY(-50%) rotate(180deg); }
-.tick { position: absolute; left: 79%; top: 50%; width: 7.5%; height: 1px; background: color-mix(in oklab, var(--foreground) 76%, transparent); }
+.month-name { position: absolute; left: 96.5%; top: 49%; font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 400; letter-spacing: 0; white-space: nowrap; transform: translateY(-50%) rotate(180deg); }
+.tick { position: absolute; left: 91%; top: 50%; width: 5%; height: 1px; background: color-mix(in oklab, var(--foreground) 76%, transparent); }
 .minor-tick { transform: rotate(var(--tick-angle)); }
-.minor-tick::after { content: ""; position: absolute; left: 79%; top: 50%; width: 4.5%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
-.artifact { position: absolute; left: 54%; top: 50%; width: 24%; aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
-.artifact img { width: 56%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
+.minor-tick::after { content: ""; position: absolute; left: 91%; top: 50%; width: 3.5%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
+.artifact { position: absolute; left: 74.5%; top: 50%; width: 13%; aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
+.artifact img { width: 80%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
 
 .free-badge { border: 2px solid var(--foreground); border-radius: 999px; padding: 9px 21px; font-size: clamp(21px, 6.7vw, 29px); line-height: 1.15; transform: rotate(7deg); }
 .smile { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: var(--yellow); color: var(--background); font-size: 44px; line-height: 1; transform: rotate(-9deg); }
@@ -74,7 +74,7 @@ body { background: var(--background); color: var(--foreground); font-family: var
 
 @media (min-width: 421px) {
   .phone-stage { box-shadow: 0 0 0 1px var(--muted); }
-  .wheel { width: 860px; }
+  .wheel { width: 1090px; }
 }
 
 @media (prefers-reduced-motion: reduce) { .wheel, .artifact { will-change: auto; } }
