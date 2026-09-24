@@ -45,10 +45,10 @@ body { background: var(--background); color: var(--foreground); font-family: var
 
 .wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: 260vw; max-width: 1090px; aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
 .month, .minor-tick { position: absolute; inset: 0; transform: rotate(var(--month-angle)); pointer-events: none; }
-.month-name { position: absolute; left: 86.5%; top: 49%; font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 400; letter-spacing: 0; white-space: nowrap; transform: translateY(-50%) rotate(180deg); }
-.tick { position: absolute; left: 81%; top: 50%; width: 4%; height: 1px; background: color-mix(in oklab, var(--foreground) 76%, transparent); }
+.month-name { position: absolute; left: 84.5%; top: 49%; font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 400; letter-spacing: 0; white-space: nowrap; transform: translateY(-50%) rotate(180deg); }
+.tick { position: absolute; left: 79.5%; top: 50%; width: 4%; height: 1px; background: color-mix(in oklab, var(--foreground) 76%, transparent); }
 .minor-tick { transform: rotate(var(--tick-angle)); }
-.minor-tick::after { content: ""; position: absolute; left: 81%; top: 50%; width: 3%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
+.minor-tick::after { content: ""; position: absolute; left: 79.5%; top: 50%; width: 3%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
 .artifact { position: absolute; left: 65%; top: 50%; width: 10%; aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
 .artifact img { width: 80%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
 
