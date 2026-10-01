@@ -1,6 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import walkingDetail from "@/assets/walking-detail.jpg";
+import avatar0 from "@/assets/avatars/avatar0.jpg";
+import avatar1 from "@/assets/avatars/avatar1.jpg";
+import avatar2 from "@/assets/avatars/avatar2.jpg";
+import avatar3 from "@/assets/avatars/avatar3.jpg";
+import avatar4 from "@/assets/avatars/avatar4.jpg";
+import avatar5 from "@/assets/avatars/avatar5.jpg";
+import avatar6 from "@/assets/avatars/avatar6.jpg";
+import avatar7 from "@/assets/avatars/avatar7.jpg";
+import avatar8 from "@/assets/avatars/avatar8.jpg";
+import avatar9 from "@/assets/avatars/avatar9.jpg";
+import avatar10 from "@/assets/avatars/avatar10.jpg";
+import avatar11 from "@/assets/avatars/avatar11.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +28,19 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const months = [
-  "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
-  "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER",
+const users = [
+  { name: "AYESHA", img: avatar0 },
+  { name: "BILAL", img: avatar1 },
+  { name: "ZARA", img: avatar2 },
+  { name: "HAMZA", img: avatar3 },
+  { name: "SARA", img: avatar4 },
+  { name: "OMAR", img: avatar5 },
+  { name: "FATIMA", img: avatar6 },
+  { name: "ALI", img: avatar7 },
+  { name: "HINA", img: avatar8 },
+  { name: "DANISH", img: avatar9 },
+  { name: "NOOR", img: avatar10 },
+  { name: "ADEEL", img: avatar11 },
 ];
 
 const accents: Record<number, ReactNode> = {
@@ -136,12 +158,14 @@ function Index() {
         </header>
 
         <div ref={wheelRef} className="wheel">
-          {months.map((month, index) => {
+          {users.map((user, index) => {
             const angle = index * 30 + 180;
             return (
-              <div className="month" key={month} style={{ "--month-angle": `${angle}deg` } as CSSProperties}>
-                <span className="tick" />
-                <span className="month-name">{month}</span>
+              <div className="month" key={user.name} style={{ "--month-angle": `${angle}deg` } as CSSProperties}>
+                <span className="user-name">{user.name}</span>
+                <div className="avatar">
+                  <img src={user.img} alt={user.name} width={256} height={256} loading="lazy" />
+                </div>
                 <div className="artifact" data-counter-rotate data-base-angle={angle}>
                   {accents[index]}
                 </div>
