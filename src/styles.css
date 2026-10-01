@@ -45,9 +45,10 @@ body { background: var(--background); color: var(--foreground); font-family: var
 
 .wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: 260vw; max-width: 1090px; aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
 .month, .minor-tick { position: absolute; inset: 0; transform: rotate(var(--month-angle)); pointer-events: none; }
-.avatar { position: absolute; left: 84.5%; top: 49%; width: 5.5%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; transform: translateY(-50%) rotate(180deg); }
+.user-slot { position: absolute; left: 76%; top: 50%; display: flex; align-items: center; gap: 7px; transform: translateY(-50%) rotate(180deg); }
+.user-name { font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; }
+.avatar { width: clamp(24px, 7.5vw, 32px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; flex: none; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-.user-name { position: absolute; left: 76%; top: 50%; font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; transform: translateY(-50%) rotate(180deg); }
 .minor-tick { transform: rotate(var(--tick-angle)); }
 .minor-tick::after { content: ""; position: absolute; left: 76%; top: 50%; width: 3%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
 .artifact { position: absolute; left: 65%; top: 50%; width: 10%; aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
