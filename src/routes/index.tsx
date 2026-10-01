@@ -163,10 +163,10 @@ function Index() {
             return (
               <div className="month" key={user.name} style={{ "--month-angle": `${angle}deg` } as CSSProperties}>
                 <div className="user-slot">
-                  <span className="user-name">{user.name}</span>
                   <div className="avatar">
                     <img src={user.img} alt={user.name} width={256} height={256} loading="lazy" />
                   </div>
+                  <span className="user-name">{user.name}</span>
                 </div>
                 <div className="artifact" data-counter-rotate data-base-angle={angle}>
                   {accents[index]}
