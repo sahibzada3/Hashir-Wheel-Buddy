@@ -174,9 +174,11 @@ function Index() {
               </div>
             );
           })}
-          {Array.from({ length: 60 }).map((_, index) => (
-            <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6 + 180}deg` } as CSSProperties} />
-          ))}
+          {Array.from({ length: 60 }).map((_, index) =>
+            index % 5 === 0 ? null : (
+              <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6 + 180}deg` } as CSSProperties} />
+            )
+          )}
         </div>
 
         <footer className="footer-nav"><span>JITTER</span><span>MOTION</span><span>TEMPLATE</span></footer>
