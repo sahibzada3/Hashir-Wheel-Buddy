@@ -34,7 +34,7 @@ html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; over
 body { background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
 
 .app-shell { width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; background: var(--background); }
-.phone-stage { position: relative; width: min(100vw, 420px); height: 100dvh; max-height: 100dvh; overflow: hidden; background: var(--background); touch-action: none; user-select: none; cursor: grab; }
+.phone-stage { position: relative; --stage: min(100vw, 420px); width: var(--stage); height: 100dvh; max-height: 100dvh; overflow: hidden; background: var(--background); touch-action: none; user-select: none; cursor: grab; }
 .phone-stage:active { cursor: grabbing; }
 .masthead, .footer-nav { position: absolute; z-index: 20; left: 0; right: 0; display: flex; justify-content: space-between; pointer-events: none; }
 .masthead { top: 0; align-items: center; padding: 9px 9px; }
@@ -43,15 +43,15 @@ body { background: var(--background); color: var(--foreground); font-family: var
 .footer-nav { bottom: 0; padding: 10px 9px; font-size: 6px; font-weight: 500; }
 .footer-nav span:nth-child(2) { position: absolute; left: 50%; transform: translateX(-50%); }
 
-.wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: 260vw; max-width: 1090px; aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
+.wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: max(calc(100dvh - 120px), calc(var(--stage) * 1.85)); aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
 .month, .minor-tick { position: absolute; inset: 0; transform: rotate(var(--month-angle)); pointer-events: none; }
-.user-slot { position: absolute; left: 76%; top: 50%; display: flex; align-items: center; gap: 7px; transform: translateY(-50%) rotate(180deg); }
+.user-slot { position: absolute; left: calc(50% + var(--stage) * 0.676); top: 50%; display: flex; align-items: center; gap: 7px; transform: translateY(-50%) rotate(180deg); }
 .user-name { font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; }
 .avatar { width: clamp(24px, 7.5vw, 32px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; flex: none; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 .minor-tick { transform: rotate(var(--tick-angle)); }
-.minor-tick::after { content: ""; position: absolute; left: 76%; top: 50%; width: 3%; height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
-.artifact { position: absolute; left: 65%; top: 50%; width: 10%; aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
+.minor-tick::after { content: ""; position: absolute; left: calc(50% + var(--stage) * 0.676); top: 50%; width: calc(var(--stage) * 0.078); height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
+.artifact { position: absolute; left: calc(50% + var(--stage) * 0.15); top: 50%; width: calc(var(--stage) * 0.26); aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
 .artifact img { width: 80%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
 
 .free-badge { border: 2px solid var(--foreground); border-radius: 999px; padding: 7px 16px; font-size: clamp(18px, 5.5vw, 24px); line-height: 1.15; transform: rotate(7deg); }
@@ -76,7 +76,6 @@ body { background: var(--background); color: var(--foreground); font-family: var
 
 @media (min-width: 421px) {
   .phone-stage { box-shadow: 0 0 0 1px var(--muted); }
-  .wheel { width: 1090px; }
 }
 
 @media (prefers-reduced-motion: reduce) { .wheel, .artifact { will-change: auto; } }
