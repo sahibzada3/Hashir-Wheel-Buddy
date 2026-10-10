@@ -1,188 +1,642 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
-import walkingDetail from "@/assets/walking-detail.jpg";
-import avatar0 from "@/assets/avatars/avatar0.jpg";
-import avatar1 from "@/assets/avatars/avatar1.jpg";
-import avatar2 from "@/assets/avatars/avatar2.jpg";
-import avatar3 from "@/assets/avatars/avatar3.jpg";
-import avatar4 from "@/assets/avatars/avatar4.jpg";
-import avatar5 from "@/assets/avatars/avatar5.jpg";
-import avatar6 from "@/assets/avatars/avatar6.jpg";
-import avatar7 from "@/assets/avatars/avatar7.jpg";
-import avatar8 from "@/assets/avatars/avatar8.jpg";
-import avatar9 from "@/assets/avatars/avatar9.jpg";
-import avatar10 from "@/assets/avatars/avatar10.jpg";
-import avatar11 from "@/assets/avatars/avatar11.jpg";
+import { useState } from "react";
+import { MomentViewer, type UserMoments } from "@/components/MomentViewer";
+import { usersList as baseUsers, userMomentsData } from "@/lib/momentsData";
+import { BottomBar, UploadWheelCluster, type UploadGroup, type UserUpload } from "@/components/PostingSystem";
+import { CommentsModal } from "@/components/CommentsModal";
+import { Heart } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Fico — Recap 05" },
-      { name: "description", content: "An interactive circular year in motion." },
-      { property: "og:title", content: "Fico — Recap 05" },
-      { property: "og:description", content: "An interactive circular year in motion." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
+      { title: "Moments Buddy — Daily Feed" },
+      { name: "description", content: "Daily moments in a clean vertical feed." },
     ],
   }),
   component: Index,
 });
 
-const users = [
-  { name: "AYESHA", img: avatar0 },
-  { name: "BILAL", img: avatar1 },
-  { name: "ZARA", img: avatar2 },
-  { name: "HAMZA", img: avatar3 },
-  { name: "SARA", img: avatar4 },
-  { name: "OMAR", img: avatar5 },
-  { name: "FATIMA", img: avatar6 },
-  { name: "ALI", img: avatar7 },
-  { name: "HINA", img: avatar8 },
-  { name: "DANISH", img: avatar9 },
-  { name: "NOOR", img: avatar10 },
-  { name: "ADEEL", img: avatar11 },
+// Vibrant moments for friends in vertical list
+interface FriendFeedItem {
+  id: string;
+  name: string;
+  avatar: string;
+  timeAgo: string;
+  photo: string;
+  quote: string;
+  graphic: string;
+  caption: string;
+  reactions: { name: string; avatar: string }[];
+}
+
+const feedData: FriendFeedItem[] = [
+  {
+    id: "f1",
+    name: "Arsalan",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "25 min ago",
+    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80",
+    quote: "kjawhebfj\nrfffffffffb\nhituehijrtbyj\nrbjrtgbj",
+    graphic: "🎻",
+    caption: "Morning acoustic vibes along the desert trail.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Sara", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80" },
+      { name: "Omar", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
+  {
+    id: "f2",
+    name: "Darlene",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "2 hrs ago",
+    photo: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80",
+    quote: "Such a wonderful\nand informative\nmoment seen.",
+    graphic: "🌸",
+    caption: "Fresh sea breeze and quiet morning coffee.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Zara", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
+  {
+    id: "f3",
+    name: "Hamza",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "5 hrs ago",
+    photo: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=400&q=80",
+    quote: "Fast strides\ncrossing bridges\nbefore dark.",
+    graphic: "🏃",
+    caption: "City marathon training run before sunset.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Bilal", avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=80&q=80" },
+      { name: "Sara", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
+  {
+    id: "f4",
+    name: "Ayesha",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "7 hrs ago",
+    photo: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=400&q=80",
+    quote: "Handmade shapes\nfresh from the\nstudio kiln.",
+    graphic: "🎨",
+    caption: "Ceramics showcase exhibition today.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Hina", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
+  {
+    id: "f5",
+    name: "Bilal",
+    avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "12 hrs ago",
+    photo: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=400&q=80",
+    quote: "20km coastal\ntrail under\nclear skies.",
+    graphic: "🚴",
+    caption: "Waterfront cycling route along the bay.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Ali", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
+  {
+    id: "f6",
+    name: "Fatima",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+    timeAgo: "1 day ago",
+    photo: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+    quote: "Garden lights\nglowing under\nthe pines.",
+    graphic: "✨",
+    caption: "Weekend gathering lights and warm memories.",
+    reactions: [
+      { name: "Akram", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" },
+      { name: "Sara", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80" },
+    ],
+  },
 ];
 
-const accents: Record<number, ReactNode> = {
-  0: <div className="free-badge">FREE</div>,
-  1: <div className="smile" aria-label="Smiling face"><span>⌣</span></div>,
-  2: <div className="speech" aria-label="Ya, öh, uch"><i>YA</i><i>ÖH</i><i>UCH!</i></div>,
-  3: <img src={walkingDetail} alt="Fashion in motion" width={816} height={816} />,
-  4: <div className="sattel">Sattel<span>〰</span></div>,
-  5: <div className="folder" aria-label="Blue folder" />,
-  6: <div className="loops" aria-label="Loop mark">∞</div>,
-  7: <div className="summer-orb" aria-label="Summer portrait">●</div>,
-  8: <div className="swoosh" aria-label="Swoosh mark">⌁</div>,
-  9: <div className="life"><b>♥</b> Life Happens</div>,
-  10: <div className="portrait-pair"><span>T</span></div>,
-  11: <p className="manifesto">Restart® is a versatile typeface family by Superior Type.<br/><br/>No logical absurdity results from the hypothesis that the world consists of mystic.</p>,
-};
+// Helper to convert an item into MomentViewer data
+function buildViewerFromFeedItem(item: FriendFeedItem): UserMoments {
+  return {
+    userIndex: 0,
+    name: item.name,
+    avatar: item.avatar,
+    handle: `@${item.name.toLowerCase()}`,
+    moments: [
+      {
+        id: `${item.id}-photo`,
+        title: "Photo Moment",
+        description: item.caption,
+        time: item.timeAgo,
+        gradient: "bg-gradient-to-br from-zinc-800 to-zinc-950",
+        image: item.photo,
+        momentType: "photo",
+        likes: 18,
+      },
+      {
+        id: `${item.id}-quote`,
+        title: "Quote Moment",
+        quoteText: item.quote,
+        description: item.caption,
+        time: item.timeAgo,
+        gradient: "bg-gradient-to-br from-stone-900 to-neutral-950",
+        momentType: "quote",
+        likes: 24,
+      },
+      {
+        id: `${item.id}-graphic`,
+        title: item.graphic,
+        graphicEmoji: item.graphic,
+        description: item.caption,
+        time: item.timeAgo,
+        gradient: "bg-gradient-to-br from-indigo-950 to-zinc-950",
+        momentType: "graphic",
+        likes: 31,
+      },
+    ],
+  };
+}
 
-const START_ROTATION = -60;
+function buildViewerFromUserUploads(uploads: UserUpload[], description: string): UserMoments {
+  return {
+    userIndex: 999,
+    name: "Hashir",
+    avatar: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23FF3BA7'/%3E%3Ctext x='20' y='26' text-anchor='middle' font-size='18' fill='white'%3E👤%3C/text%3E%3C/svg%3E",
+    handle: "@hashir",
+    moments: uploads.map((u) => ({
+      id: u.id,
+      title: u.type === "photo" ? (u.mediaType === "video" ? "📹 My Video" : "📷 My Photo") : u.type === "quote" ? `"${u.quoteText}"` : `${u.graphicEmoji}`,
+      description: description || "My daily moment upload.",
+      time: "Just now",
+      gradient: u.type === "photo"
+        ? "bg-gradient-to-br from-zinc-800 via-zinc-700 to-zinc-900"
+        : u.type === "quote"
+          ? "bg-gradient-to-br from-stone-900 via-zinc-800 to-neutral-900"
+          : "bg-gradient-to-br from-indigo-950 via-slate-900 to-zinc-900",
+      image: u.type === "photo" ? u.photoUrl : undefined,
+      graphicEmoji: u.type === "graphic" ? u.graphicEmoji : undefined,
+      quoteText: u.type === "quote" ? u.quoteText : undefined,
+      momentType: u.type,
+      likes: 12,
+    })),
+  };
+}
 
 function Index() {
-  const surfaceRef = useRef<HTMLDivElement>(null);
-  const wheelRef = useRef<HTMLDivElement>(null);
-  const rotationRef = useRef(START_ROTATION);
-  const dragRef = useRef({ active: false, pointerId: -1, lastY: 0, lastX: 0, lastTime: 0, velocity: 0 });
-  const inertiaRef = useRef<number | null>(null);
+  const [activeViewerUser, setActiveViewerUser] = useState<UserMoments | null>(null);
+  const [commentsTarget, setCommentsTarget] = useState<{ name: string; caption: string } | null>(null);
 
-  useEffect(() => {
-    const surface = surfaceRef.current;
-    const wheel = wheelRef.current;
-    if (!surface || !wheel) return;
-
-    const paint = () => {
-      const rotation = rotationRef.current;
-      wheel.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
-      wheel.querySelectorAll<HTMLElement>("[data-counter-rotate]").forEach((item) => {
-        const base = Number(item.dataset["baseAngle"] ?? 0);
-        item.style.transform = `translateY(-50%) rotate(${-rotation - base}deg)`;
-      });
-    };
-
-    const stopInertia = () => {
-      if (inertiaRef.current !== null) cancelAnimationFrame(inertiaRef.current);
-      inertiaRef.current = null;
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      stopInertia();
-      surface.setPointerCapture(event.pointerId);
-      dragRef.current = {
-        active: true,
-        pointerId: event.pointerId,
-        lastY: event.clientY,
-        lastX: event.clientX,
-        lastTime: performance.now(),
-        velocity: 0,
-      };
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      const drag = dragRef.current;
-      if (!drag.active || drag.pointerId !== event.pointerId) return;
-      event.preventDefault();
-      const now = performance.now();
-      const dy = event.clientY - drag.lastY;
-      const dx = event.clientX - drag.lastX;
-      const elapsed = Math.max(8, now - drag.lastTime);
-      const delta = dy * 0.34 + dx * 0.08;
-      rotationRef.current += delta;
-      drag.velocity = (delta / elapsed) * 16;
-      drag.lastY = event.clientY;
-      drag.lastX = event.clientX;
-      drag.lastTime = now;
-      paint();
-    };
-
-    const release = (event: PointerEvent) => {
-      const drag = dragRef.current;
-      if (!drag.active || drag.pointerId !== event.pointerId) return;
-      drag.active = false;
-      if (surface.hasPointerCapture(event.pointerId)) surface.releasePointerCapture(event.pointerId);
-      let velocity = drag.velocity;
-      const glide = () => {
-        velocity *= 0.94;
-        if (Math.abs(velocity) < 0.015) {
-          inertiaRef.current = null;
-          return;
-        }
-        rotationRef.current += velocity;
-        paint();
-        inertiaRef.current = requestAnimationFrame(glide);
-      };
-      inertiaRef.current = requestAnimationFrame(glide);
-    };
-
-    paint();
-    surface.addEventListener("pointerdown", onPointerDown);
-    surface.addEventListener("pointermove", onPointerMove, { passive: false });
-    surface.addEventListener("pointerup", release);
-    surface.addEventListener("pointercancel", release);
-    return () => {
-      stopInertia();
-      surface.removeEventListener("pointerdown", onPointerDown);
-      surface.removeEventListener("pointermove", onPointerMove);
-      surface.removeEventListener("pointerup", release);
-      surface.removeEventListener("pointercancel", release);
-    };
-  }, []);
+  const [uploadGroup, setUploadGroup] = useState<UploadGroup>({
+    uploads: [
+      {
+        id: "demo-photo",
+        type: "photo",
+        photoUrl: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
+        mediaType: "image",
+      },
+      {
+        id: "demo-quote",
+        type: "quote",
+        quoteText: "kjawhebfj\nrfffffffffb\nhituehijrtbyj\nrbjrtgbj",
+      },
+      {
+        id: "demo-graphic",
+        type: "graphic",
+        graphicEmoji: "🎻",
+        graphicMotion: "float",
+      },
+    ],
+    description: "Such a wonderful and informative thing i have ever seen.",
+  });
 
   return (
-    <main className="app-shell">
-      <section ref={surfaceRef} className="phone-stage" aria-label="Drag to rotate the year">
-        <header className="masthead">
-          <div className="wordmark">FICO</div>
-          <div className="edition">RECAP 05</div>
+    <main className="app-shell" style={{ background: "#FFFFFF", color: "#111827" }}>
+      <section
+        className="phone-stage"
+        style={{
+          background: "#FFFFFF",
+          boxShadow: "0 4px 30px rgba(0,0,0,0.06)",
+          position: "relative",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* App Masthead */}
+        <header
+          style={{
+            padding: "14px 18px 10px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: "1px solid rgba(0,0,0,0.05)",
+            background: "#FFFFFF",
+            zIndex: 10,
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF3BA7" }} />
+            <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.08em", color: "#111827" }}>
+              MOMENTS BUDDY
+            </span>
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#FF3BA7", letterSpacing: "0.05em" }}>
+            DAILY FEED
+          </span>
         </header>
 
-        <div ref={wheelRef} className="wheel">
-          {users.map((user, index) => {
-            const angle = index * 30 + 180;
-            return (
-              <div className="month" key={user.name} style={{ "--month-angle": `${angle}deg` } as CSSProperties}>
-                <div className="user-slot">
-                  <div className="avatar">
-                    <img src={user.img} alt={user.name} width={256} height={256} loading="lazy" />
+        {/* ── VERTICAL FEED: Fits 3 users on screen, extreme left layout ── */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+            padding: "8px 14px 20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+          }}
+        >
+          {/* USER SLOT (Hashir) at top if has uploads */}
+          {uploadGroup.uploads.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                padding: "8px 0 10px",
+                borderBottom: "1px solid rgba(0,0,0,0.05)",
+                minHeight: "calc((100dvh - 180px) / 3)",
+                justifyContent: "center",
+              }}
+            >
+              {/* Profile Image + Name + Time in top corner */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #FF3BA7, #9B51E0)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 13,
+                      color: "#fff",
+                      boxShadow: "0 0 10px rgba(255,59,167,0.4)",
+                      border: "1.5px solid #FFFFFF",
+                      flexShrink: 0,
+                    }}
+                  >
+                    👤
                   </div>
-                  <span className="user-name">{user.name}</span>
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "#111827" }}>
+                    Hashir <span style={{ color: "#FF3BA7", fontSize: 10, fontWeight: 800 }}>(You)</span>
+                  </span>
                 </div>
-                <div className="artifact" data-counter-rotate data-base-angle={angle}>
-                  {accents[index]}
+                {/* Time in corner */}
+                <span style={{ fontSize: 10.5, color: "#9CA3AF", fontWeight: 500 }}>
+                  Just now
+                </span>
+              </div>
+
+              {/* Row: Extreme left half-covered uploads + Compact caption/react box */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                {/* Extreme Left Uploads (Half-covered style) */}
+                <div
+                  onClick={() => setActiveViewerUser(buildViewerFromUserUploads(uploadGroup.uploads, uploadGroup.description))}
+                  style={{ flexShrink: 0, cursor: "pointer" }}
+                >
+                  <UploadWheelCluster
+                    group={uploadGroup}
+                    onClick={() => setActiveViewerUser(buildViewerFromUserUploads(uploadGroup.uploads, uploadGroup.description))}
+                  />
+                </div>
+
+                {/* Compact Right Side Box: Caption + React Button + Akram+3 */}
+                <div
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    background: "#FAFAFA",
+                    borderRadius: 14,
+                    padding: "8px 10px",
+                    border: "1px solid rgba(0,0,0,0.06)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                  }}
+                >
+                  {/* Caption line */}
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 11,
+                      color: "#1F2937",
+                      fontWeight: 600,
+                      fontStyle: "italic",
+                      lineHeight: 1.35,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    "{uploadGroup.description || "Daily moment."}"
+                  </p>
+
+                  {/* React Button & Reactions row */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+                    {/* Reactions text */}
+                    <div
+                      onClick={() => setCommentsTarget({ name: "Hashir", caption: uploadGroup.description })}
+                      style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <img
+                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
+                          alt="Akram"
+                          style={{ width: 16, height: 16, borderRadius: "50%", border: "1px solid #fff" }}
+                        />
+                        <img
+                          src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&q=80"
+                          alt="Sara"
+                          style={{ width: 16, height: 16, borderRadius: "50%", border: "1px solid #fff", marginLeft: -5 }}
+                        />
+                      </div>
+                      <span style={{ fontSize: 9.5, fontWeight: 700, color: "#4B5563" }}>
+                        Akram + 3
+                      </span>
+                    </div>
+
+                    {/* React Button */}
+                    <button
+                      onClick={() => setCommentsTarget({ name: "Hashir", caption: uploadGroup.description })}
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: 8,
+                        background: "#FF3BA7",
+                        border: "none",
+                        color: "#FFFFFF",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Heart size={10} fill="#FFFFFF" />
+                      <span>React</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            );
-          })}
-          {Array.from({ length: 60 }).map((_, index) =>
-            index % 5 === 0 ? null : (
-              <span className="minor-tick" key={index} style={{ "--tick-angle": `${index * 6 + 180}deg` } as CSSProperties} />
-            )
+            </div>
           )}
+
+          {/* FRIENDS FEED ITEMS */}
+          {feedData.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                padding: "8px 0 10px",
+                borderBottom: "1px solid rgba(0,0,0,0.05)",
+                minHeight: "calc((100dvh - 180px) / 3)",
+                justifyContent: "center",
+              }}
+            >
+              {/* 1. Profile Image + Name + Time in corner */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <img
+                    src={item.avatar}
+                    alt={item.name}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      border: "1.5px solid rgba(0,0,0,0.08)",
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontSize: 12.5, fontWeight: 700, color: "#111827" }}>
+                    {item.name}
+                  </span>
+                </div>
+                {/* Time in corner */}
+                <span style={{ fontSize: 10.5, color: "#9CA3AF", fontWeight: 500 }}>
+                  {item.timeAgo}
+                </span>
+              </div>
+
+              {/* 2. Row: Extreme Left Uploads + Compact Caption/React Box */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                {/* Extreme Left Uploads: Photo + Black Quote Card + Floating Graphic exactly matching image */}
+                <div
+                  onClick={() => setActiveViewerUser(buildViewerFromFeedItem(item))}
+                  style={{
+                    position: "relative",
+                    width: 124,
+                    height: 64,
+                    flexShrink: 0,
+                    cursor: "pointer",
+                  }}
+                >
+                  {/* Photo Square (Extreme Left) */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 56,
+                      height: 56,
+                      borderRadius: 8,
+                      overflow: "hidden",
+                      border: "1.5px solid rgba(0,0,0,0.12)",
+                      boxShadow: "0 3px 10px rgba(0,0,0,0.18)",
+                      background: "#E5E7EB",
+                      zIndex: 1,
+                    }}
+                  >
+                    <img src={item.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+
+                  {/* Black Quote Card (Half covers Photo) */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 34,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 56,
+                      height: 56,
+                      borderRadius: 12,
+                      background: "#000000",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 5,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+                      zIndex: 2,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 7,
+                        color: "#FFFFFF",
+                        textAlign: "center",
+                        lineHeight: 1.25,
+                        fontWeight: 600,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 4,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {item.quote}
+                    </span>
+                  </div>
+
+                  {/* Graphic Sticker (Half covers Quote) */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: 66,
+                      top: "45%",
+                      transform: "translateY(-50%)",
+                      fontSize: 44,
+                      lineHeight: 1,
+                      display: "inline-block",
+                      filter: "drop-shadow(0 3px 8px rgba(0,0,0,0.25))",
+                      zIndex: 3,
+                    }}
+                  >
+                    {item.graphic}
+                  </span>
+                </div>
+
+                {/* Compact Right Side Box: Caption + React Button + Akram+3 */}
+                <div
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    background: "#FAFAFA",
+                    borderRadius: 14,
+                    padding: "8px 10px",
+                    border: "1px solid rgba(0,0,0,0.06)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                  }}
+                >
+                  {/* Caption line */}
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 11,
+                      color: "#1F2937",
+                      fontWeight: 600,
+                      fontStyle: "italic",
+                      lineHeight: 1.35,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    "{item.caption}"
+                  </p>
+
+                  {/* React Button & Reactions row */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+                    {/* Reactions text */}
+                    <div
+                      onClick={() => setCommentsTarget({ name: item.name, caption: item.caption })}
+                      style={{ display: "flex", alignItems: "center", gap: 4, cursor: "pointer" }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        {item.reactions.slice(0, 2).map((r, i) => (
+                          <img
+                            key={r.name + i}
+                            src={r.avatar}
+                            alt={r.name}
+                            style={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: "50%",
+                              border: "1px solid #fff",
+                              marginLeft: i === 0 ? 0 : -5,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <span style={{ fontSize: 9.5, fontWeight: 700, color: "#4B5563" }}>
+                        Akram + {item.reactions.length}
+                      </span>
+                    </div>
+
+                    {/* React Button */}
+                    <button
+                      onClick={() => setCommentsTarget({ name: item.name, caption: item.caption })}
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: 8,
+                        background: "#FF3BA7",
+                        border: "none",
+                        color: "#FFFFFF",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <Heart size={10} fill="#FFFFFF" />
+                      <span>React</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <footer className="footer-nav"><span>JITTER</span><span>MOTION</span><span>TEMPLATE</span></footer>
+        {/* ── Modals & Viewers ── */}
+
+        {/* Card Deck Swipe Viewer on item click */}
+        {activeViewerUser !== null && (
+          <MomentViewer
+            user={activeViewerUser}
+            onClose={() => setActiveViewerUser(null)}
+          />
+        )}
+
+        {/* Comments & Reactions Modal */}
+        {commentsTarget !== null && (
+          <CommentsModal
+            userName={commentsTarget.name}
+            caption={commentsTarget.caption}
+            onClose={() => setCommentsTarget(null)}
+          />
+        )}
       </section>
+
+      {/* Bottom Posting Bar (White background, pink plus button, 3 upload tools) */}
+      <BottomBar
+        group={uploadGroup}
+        onGroupChange={setUploadGroup}
+      />
     </main>
   );
 }

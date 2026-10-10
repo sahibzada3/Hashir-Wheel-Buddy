@@ -17,13 +17,13 @@
 }
 
 :root {
-  --background: oklch(0 0 0);
-  --foreground: oklch(0.97 0 0);
-  --primary: oklch(0.97 0 0);
-  --primary-foreground: oklch(0 0 0);
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.62 0 0);
-  --border: oklch(0.72 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
+  --primary: oklch(0.65 0.25 350);
+  --primary-foreground: oklch(1 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --border: oklch(0.9 0 0);
   --red: oklch(0.58 0.23 27);
   --yellow: oklch(0.84 0.17 91);
   --blue: oklch(0.66 0.13 228);
@@ -34,8 +34,9 @@ html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; over
 body { background: var(--background); color: var(--foreground); font-family: var(--font-sans); }
 
 .app-shell { width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; background: var(--background); }
-.phone-stage { position: relative; --stage: min(100vw, 420px); width: var(--stage); height: 100dvh; max-height: 100dvh; overflow: hidden; background: var(--background); touch-action: none; user-select: none; cursor: grab; }
+.phone-stage { position: relative; --stage: min(100vw, 420px); width: var(--stage); height: calc(100dvh - 88px); max-height: calc(100dvh - 88px); overflow: hidden; background: var(--background); touch-action: none; user-select: none; cursor: grab; }
 .phone-stage:active { cursor: grabbing; }
+
 .masthead, .footer-nav { position: absolute; z-index: 20; left: 0; right: 0; display: flex; justify-content: space-between; pointer-events: none; }
 .masthead { top: 0; align-items: center; padding: 9px 9px; }
 .wordmark { font-size: 12px; font-weight: 600; }
@@ -45,14 +46,16 @@ body { background: var(--background); color: var(--foreground); font-family: var
 
 .wheel { position: absolute; z-index: 5; left: 98%; top: 50%; width: max(calc(100dvh - 120px), calc(var(--stage) * 1.85)); aspect-ratio: 1; border-radius: 50%; transform-origin: 50% 50%; will-change: transform; }
 .month, .minor-tick { position: absolute; inset: 0; transform: rotate(var(--month-angle)); pointer-events: none; }
-.user-slot { position: absolute; left: calc(50% + var(--stage) * 0.616); top: 50%; display: flex; align-items: center; gap: 7px; transform: translateY(-50%) rotate(180deg); }
+.user-slot { position: absolute; left: calc(50% + var(--stage) * 0.616); top: 50%; display: flex; align-items: center; gap: 7px; transform: translateY(-50%) rotate(180deg); pointer-events: auto; cursor: pointer; }
+.user-slot:hover .avatar { transform: scale(1.1); transition: transform 0.2s ease; }
 .user-name { font-size: clamp(9px, 2.5vw, 11px); line-height: 1; font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; }
-.avatar { width: clamp(24px, 7.5vw, 32px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; flex: none; }
+.avatar { width: clamp(24px, 7.5vw, 32px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; flex: none; transition: transform 0.2s ease; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 .minor-tick { transform: rotate(var(--tick-angle)); }
 .minor-tick::after { content: ""; position: absolute; left: calc(50% + var(--stage) * 0.616); top: 50%; width: calc(var(--stage) * 0.078); height: 1px; background: color-mix(in oklab, var(--foreground) 65%, transparent); }
-.artifact { position: absolute; left: calc(50% + var(--stage) * 0.15); top: 50%; width: calc(var(--stage) * 0.26); aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; }
-.artifact img { width: 80%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
+.artifact { position: absolute; left: calc(50% + var(--stage) * 0.455); top: 50%; width: calc(var(--stage) * 0.19); aspect-ratio: 1; display: grid; place-items: center; transform-origin: center; will-change: transform; pointer-events: auto; cursor: pointer; transition: filter 0.2s ease; }
+.artifact:hover { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.65)); }
+.artifact img { width: 85%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
 
 .free-badge { border: 2px solid var(--foreground); border-radius: 999px; padding: 7px 16px; font-size: clamp(18px, 5.5vw, 24px); line-height: 1.15; transform: rotate(7deg); }
 .smile { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: var(--yellow); color: var(--background); font-size: 38px; line-height: 1; transform: rotate(-9deg); }
@@ -72,10 +75,49 @@ body { background: var(--background); color: var(--foreground); font-family: var
 .life b { color: var(--red); font-family: sans-serif; font-style: normal; }
 .portrait-pair { width: 54px; height: 54px; border-radius: 50%; background: oklch(0.62 0 0); position: relative; }
 .portrait-pair span { position: absolute; left: -20px; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: var(--foreground); color: var(--background); font-size: 28px; font-weight: 700; }
-.manifesto { width: 96px; margin: 0; font-size: 6px; line-height: 1.05; }
+.manifesto { width: 84px; margin: 0; font-size: 6px; line-height: 1.05; }
 
 @media (min-width: 421px) {
   .phone-stage { box-shadow: 0 0 0 1px var(--muted); }
 }
 
 @media (prefers-reduced-motion: reduce) { .wheel, .artifact { will-change: auto; } }
+
+/* ── Posted moment block: 3 overlapping circles ─────────────────────────────── */
+.posted-block-accent { position: relative; width: 72px; height: 44px; }
+.pba-photo, .pba-graphic, .pba-quote { position: absolute; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--background); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+.pba-photo { left: 0; top: 50%; transform: translateY(-50%); background: #1a1a1a; z-index: 3; }
+.pba-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.pba-photo.pba-empty { font-size: 18px; background: #222; }
+.pba-graphic { left: 17px; top: 50%; transform: translateY(-50%); background: #1c1c2e; z-index: 2; font-size: 20px; }
+.pba-quote { left: 34px; top: 50%; transform: translateY(-50%); background: #1e1e1e; z-index: 1; padding: 3px; }
+.pba-q-text { font-size: 5px; color: rgba(255,255,255,0.75); line-height: 1.2; text-align: center; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+
+/* ── Motion Stickers animations ── */
+@keyframes stickerSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes stickerPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+@keyframes stickerFloat {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-6px) rotate(2deg); }
+}
+@keyframes stickerBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes stickerShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+.sticker-spin { animation: stickerSpin 6s linear infinite; display: inline-block; }
+.sticker-pulse { animation: stickerPulse 2s ease-in-out infinite; display: inline-block; }
+.sticker-float { animation: stickerFloat 3s ease-in-out infinite; display: inline-block; }
+.sticker-bounce { animation: stickerBounce 1.5s ease-in-out infinite; display: inline-block; }
+.sticker-shake { animation: stickerShake 1.2s ease-in-out infinite; display: inline-block; }
